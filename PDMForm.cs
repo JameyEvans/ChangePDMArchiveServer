@@ -41,14 +41,7 @@ namespace ChangePDMArchiveServer
                 MessageBox.Show("An error occurred while reading the config file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            DateTime sjcExpDate = DateTime.Parse("03/20/2024");
-            if (DateTime.Compare(DateTime.Now, sjcExpDate) < 0)
-            {
-                ServerNames.Add(new Server("SCCPDM01", "Santa Clara", 0, new List<string>() { "WAT_PDM_PRD", "CRCVAULT" }));
-                ServerNames.Add(new Server("SJCPDM01", "San Jose", 0, new List<string>() { "WAT_PDM_PRD", "STS PROJECTS" }));
-            }
-
+            
             // sort by ping time
             ServerNames.Sort((x, y) => x.Ping.CompareTo(y.Ping));
 
