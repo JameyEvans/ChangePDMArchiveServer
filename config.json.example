@@ -1,0 +1,24 @@
+{
+  "Servers": [
+    {
+      "Name": "PDMSERVER01",
+      "Location": "St. Louis",
+      "Vaults": [ "VAULTNAME1", "VAULTNAME2" ]
+    },
+    {
+      "Name": "PDMSERVER02",
+      "Location": "Mexico",
+      "Vaults": [ "VAULTNAME1" ]
+    },
+    {
+      "Name": "PDMSERVER02",
+      "Location": "Italy",
+      "Vaults": [ "VAULTNAME1", "VAULTNAME2", "VAULTNAME3" ]
+    }
+  ],
+  "VaultNames": [
+    "VAULTNAME1",
+    "VAULTNAME2",
+    "VAULTNAME3"
+  ]
+}
