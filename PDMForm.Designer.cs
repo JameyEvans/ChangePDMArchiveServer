@@ -39,6 +39,8 @@ namespace ChangePDMArchiveServer
             this.txtBoxResults = new MaterialSkin.Controls.MaterialMultiLineTextBox2();
             this.lblCurrentServerLabel = new MaterialSkin.Controls.MaterialLabel();
             this.lblCurrentServerValue = new MaterialSkin.Controls.MaterialLabel();
+            this.btn_restartPdm = new MaterialSkin.Controls.MaterialButton();
+            this.checkBoxRestartOnUpdate = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lblTargetServer
@@ -118,7 +120,7 @@ namespace ChangePDMArchiveServer
             this.materialButton1.Depth = 0;
             this.materialButton1.HighEmphasis = true;
             this.materialButton1.Icon = null;
-            this.materialButton1.Location = new System.Drawing.Point(6, 237);
+            this.materialButton1.Location = new System.Drawing.Point(4, 281);
             this.materialButton1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialButton1.Name = "materialButton1";
@@ -139,7 +141,7 @@ namespace ChangePDMArchiveServer
             this.txtBoxResults.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtBoxResults.Depth = 0;
             this.txtBoxResults.HideSelection = true;
-            this.txtBoxResults.Location = new System.Drawing.Point(6, 289);
+            this.txtBoxResults.Location = new System.Drawing.Point(6, 378);
             this.txtBoxResults.MaxLength = 32767;
             this.txtBoxResults.MouseState = MaterialSkin.MouseState.OUT;
             this.txtBoxResults.Name = "txtBoxResults";
@@ -179,11 +181,45 @@ namespace ChangePDMArchiveServer
             this.lblCurrentServerValue.Size = new System.Drawing.Size(1, 0);
             this.lblCurrentServerValue.TabIndex = 8;
             // 
+            // btn_restartPdm
+            // 
+            this.btn_restartPdm.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btn_restartPdm.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btn_restartPdm.Depth = 0;
+            this.btn_restartPdm.HighEmphasis = true;
+            this.btn_restartPdm.Icon = null;
+            this.btn_restartPdm.Location = new System.Drawing.Point(235, 281);
+            this.btn_restartPdm.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.btn_restartPdm.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btn_restartPdm.Name = "btn_restartPdm";
+            this.btn_restartPdm.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btn_restartPdm.Size = new System.Drawing.Size(120, 36);
+            this.btn_restartPdm.TabIndex = 9;
+            this.btn_restartPdm.Text = "Restart PDM";
+            this.btn_restartPdm.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btn_restartPdm.UseAccentColor = false;
+            this.btn_restartPdm.UseVisualStyleBackColor = true;
+            this.btn_restartPdm.Click += new System.EventHandler(this.btn_restartPdm_Click);
+            // 
+            // checkBoxRestartOnUpdate
+            // 
+            this.checkBoxRestartOnUpdate.AutoSize = true;
+            this.checkBoxRestartOnUpdate.Checked = true;
+            this.checkBoxRestartOnUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxRestartOnUpdate.Location = new System.Drawing.Point(9, 245);
+            this.checkBoxRestartOnUpdate.Name = "checkBoxRestartOnUpdate";
+            this.checkBoxRestartOnUpdate.Size = new System.Drawing.Size(142, 17);
+            this.checkBoxRestartOnUpdate.TabIndex = 10;
+            this.checkBoxRestartOnUpdate.Text = "Restart PDM On Update";
+            this.checkBoxRestartOnUpdate.UseVisualStyleBackColor = true;
+            // 
             // PDMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(817, 390);
+            this.ClientSize = new System.Drawing.Size(817, 500);
+            this.Controls.Add(this.checkBoxRestartOnUpdate);
+            this.Controls.Add(this.btn_restartPdm);
             this.Controls.Add(this.lblCurrentServerValue);
             this.Controls.Add(this.lblCurrentServerLabel);
             this.Controls.Add(this.txtBoxResults);
@@ -211,5 +247,7 @@ namespace ChangePDMArchiveServer
         private MaterialSkin.Controls.MaterialMultiLineTextBox2 txtBoxResults;
         private MaterialSkin.Controls.MaterialLabel lblCurrentServerLabel;
         private MaterialSkin.Controls.MaterialLabel lblCurrentServerValue;
+        private MaterialSkin.Controls.MaterialButton btn_restartPdm;
+        private CheckBox checkBoxRestartOnUpdate;
     }
 }

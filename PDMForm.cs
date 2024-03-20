@@ -4,6 +4,7 @@ using MaterialSkin.Controls;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.Data;
+using System.Diagnostics;
 
 namespace ChangePDMArchiveServer
 {
@@ -108,6 +109,10 @@ namespace ChangePDMArchiveServer
             try
             {
                 ChangeArchiveServer(comboVault.SelectedItem.ToString(), ((Server)comboTargetServer.SelectedItem).Name);
+                if (checkBoxRestartOnUpdate.Checked)
+                {
+                    SoftRebootPdm();
+                }
                 txtBoxResults.Text = $"Successfully updated target archive server to {((Server)comboTargetServer.SelectedItem).Name} for {comboVault.SelectedItem.ToString()} vault.";
             }
             catch (FileNotFoundException ex)
@@ -142,6 +147,40 @@ namespace ChangePDMArchiveServer
                 comboVault.Items.Add(vault);
             }
             comboVault.SelectedIndex = 0;
+        }
+
+        private void SoftRebootPdm()
+        {
+            // Get explorer, viewserver, and edmserver processes
+            Process[] explorerProcesses = Process.GetProcessesByName("explorer");
+
+            Process[] edmServerProcesses = Process.GetProcessesByName("EdmServer");
+            Process[] viewServerProcesses = Process.GetProcessesByName("ViewServer");
+
+            // Stop viewserver and edmservers
+            viewServerProcesses.ToList().ForEach(p => p.Kill());
+            edmServerProcesses.ToList().ForEach(p => p.Kill());
+
+            // Stop explorer.exe
+            explorerProcesses.ToList().ForEach(p => p.Kill());
+           
+           
+
+            // Restart explorer.exe if not already running
+            Process[] activeExplorer = Process.GetProcessesByName("explorer");
+            if (activeExplorer.Length == 0)
+            {
+                Process explorerProcess = new Process();
+                explorerProcess.StartInfo.FileName = "explorer.exe";
+                explorerProcess.StartInfo.UseShellExecute = true;
+                explorerProcess.Start();
+            }
+            
+        }
+
+        private void btn_restartPdm_Click(object sender, EventArgs e)
+        {
+            SoftRebootPdm();
         }
     }
 }
