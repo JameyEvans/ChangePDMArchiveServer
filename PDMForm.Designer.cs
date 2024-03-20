@@ -96,7 +96,7 @@ namespace ChangePDMArchiveServer
             this.comboVault.MaxDropDownItems = 4;
             this.comboVault.MouseState = MaterialSkin.MouseState.OUT;
             this.comboVault.Name = "comboVault";
-            this.comboVault.Size = new System.Drawing.Size(171, 49);
+            this.comboVault.Size = new System.Drawing.Size(322, 49);
             this.comboVault.StartIndex = 0;
             this.comboVault.TabIndex = 4;
             this.comboVault.SelectedIndexChanged += new System.EventHandler(this.comboVault_SelectedIndexChanged);
@@ -141,7 +141,7 @@ namespace ChangePDMArchiveServer
             this.txtBoxResults.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtBoxResults.Depth = 0;
             this.txtBoxResults.HideSelection = true;
-            this.txtBoxResults.Location = new System.Drawing.Point(6, 378);
+            this.txtBoxResults.Location = new System.Drawing.Point(4, 338);
             this.txtBoxResults.MaxLength = 32767;
             this.txtBoxResults.MouseState = MaterialSkin.MouseState.OUT;
             this.txtBoxResults.Name = "txtBoxResults";
@@ -152,7 +152,7 @@ namespace ChangePDMArchiveServer
             this.txtBoxResults.SelectionLength = 0;
             this.txtBoxResults.SelectionStart = 0;
             this.txtBoxResults.ShortcutsEnabled = true;
-            this.txtBoxResults.Size = new System.Drawing.Size(653, 87);
+            this.txtBoxResults.Size = new System.Drawing.Size(784, 87);
             this.txtBoxResults.TabIndex = 6;
             this.txtBoxResults.TabStop = false;
             this.txtBoxResults.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
@@ -217,7 +217,7 @@ namespace ChangePDMArchiveServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(817, 500);
+            this.ClientSize = new System.Drawing.Size(817, 454);
             this.Controls.Add(this.checkBoxRestartOnUpdate);
             this.Controls.Add(this.btn_restartPdm);
             this.Controls.Add(this.lblCurrentServerValue);
