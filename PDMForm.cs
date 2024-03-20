@@ -44,7 +44,13 @@ namespace ChangePDMArchiveServer
             }
             
             // sort by ping time
-            ServerNames.Sort((x, y) => x.Ping.CompareTo(y.Ping));
+            ServerNames.Sort((x, y) => {
+                if (x.Ping < 0)
+                {
+                    return 1;
+                }
+                return x.Ping.CompareTo(y.Ping);
+                });
 
 
 

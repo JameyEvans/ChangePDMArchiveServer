@@ -9,6 +9,13 @@ namespace ChangePDMArchiveServer
 {
     public class Server
     {
+        public bool IsReachable
+        {
+            get
+            {
+                return (Ping >= 0);
+            }
+        }
         public string Name { get; set; }
         public string Location { get; set; }
         public double Ping { get; set; }
@@ -37,7 +44,15 @@ namespace ChangePDMArchiveServer
 
         public override string ToString()
         {
-            return $"{Name} ({Location} : {Ping} ms)";
+            if (IsReachable)
+            {
+                return $"{Name} ({Location} : {Ping} ms)";
+            }
+            else
+            {
+                return $"{Name} ({Location} : Unreachable)";
+            }
+
         }
 
         public void PingServer()
