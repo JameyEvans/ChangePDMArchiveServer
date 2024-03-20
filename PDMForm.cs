@@ -82,27 +82,54 @@ namespace ChangePDMArchiveServer
             }
 
             string currentServer = rk.GetValue("ServerLoc")?.ToString() ?? "NOT FOUND";
+            rk.Close();
+            rk.Dispose();
             return currentServer;
         }
 
         private void ChangeArchiveServer(string vaultName, string serverName)
         {
             string txt = $"Vault = {vaultName}{Environment.NewLine}Server = {serverName}{Environment.NewLine}";
-            RegistryKey rk = Registry.LocalMachine.OpenSubKey($"SOFTWARE\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{comboVault.SelectedItem}", true);
-            if (rk == null)
+            RegistryKey rk1 = Registry.LocalMachine.OpenSubKey($"SOFTWARE\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{comboVault.SelectedItem}", true);
+            RegistryKey rk2 = Registry.LocalMachine.OpenSubKey($"SOFTWARE\\WOW6432Node\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{comboVault.SelectedItem}", true);
+            try
             {
-                throw new Exception("PDM registry not detected. PDM may not be installed");
-            }
 
-            string newValue = ((Server)comboTargetServer.SelectedItem).Name;
-            if (String.IsNullOrEmpty(newValue))
+
+                if (rk1 == null)
+                {
+                    throw new Exception("PDM registry not detected. PDM may not be installed");
+                }
+
+                string newValue = ((Server)comboTargetServer.SelectedItem).Name;
+                if (String.IsNullOrEmpty(newValue))
+                {
+                    throw new InvalidDataException("No target server selected");
+                }
+
+                rk1.SetValue("ServerLoc", newValue);
+
+                if (rk2 == null)
+                {
+                    rk2 = Registry.LocalMachine.CreateSubKey($"SOFTWARE\\WOW6432Node\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{comboVault.SelectedItem}");
+                }
+                rk2.SetValue("ServerLoc", newValue);
+
+                lblCurrentServerValue.Text = GetCurrentArchiveServer();
+            }
+            catch (Exception ex)
             {
-                throw new InvalidDataException("No target server selected");
+                throw ex;
             }
-
-            rk.SetValue("ServerLoc", newValue);
-
-            lblCurrentServerValue.Text = GetCurrentArchiveServer();
+            finally
+            {
+                rk1.Close();
+                rk1.Dispose();
+                
+                rk2?.Close();
+                rk2?.Dispose();
+                
+            }
         }
 
         private void PDMForm_Load(object sender, EventArgs e)
@@ -157,6 +184,7 @@ namespace ChangePDMArchiveServer
 
         private void SoftRebootPdm()
         {
+
             // Get explorer, viewserver, and edmserver processes
             Process[] explorerProcesses = Process.GetProcessesByName("explorer");
 
@@ -164,12 +192,11 @@ namespace ChangePDMArchiveServer
             Process[] viewServerProcesses = Process.GetProcessesByName("ViewServer");
 
             // Stop viewserver and edmservers
-            viewServerProcesses.ToList().ForEach(p => p.Kill());
-            edmServerProcesses.ToList().ForEach(p => p.Kill());
+            viewServerProcesses.ToList().ForEach(p => { p.Kill(); p.Dispose();});
+            edmServerProcesses.ToList().ForEach(p => { p.Kill(); p.Dispose(); });
 
             // Stop explorer.exe
-            explorerProcesses.ToList().ForEach(p => p.Kill());
-           
+            explorerProcesses.ToList().ForEach(p => { p.Kill(); p.Dispose(); });           
            
 
             // Restart explorer.exe if not already running
@@ -180,6 +207,7 @@ namespace ChangePDMArchiveServer
                 explorerProcess.StartInfo.FileName = "explorer.exe";
                 explorerProcess.StartInfo.UseShellExecute = true;
                 explorerProcess.Start();
+                explorerProcess.Dispose();
             }
             
         }
