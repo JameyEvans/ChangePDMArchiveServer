@@ -42,15 +42,16 @@ namespace ChangePDMArchiveServer
                 MessageBox.Show("An error occurred while reading the config file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
+
             // sort by ping time
-            ServerNames.Sort((x, y) => {
+            ServerNames.Sort((x, y) =>
+            {
                 if (x.Ping < 0)
                 {
                     return 1;
                 }
                 return x.Ping.CompareTo(y.Ping);
-                });
+            });
 
 
 
@@ -63,7 +64,7 @@ namespace ChangePDMArchiveServer
             comboTargetServer.DisplayMember = comboTargetServer.ValueMember = "FormDisplay";
             comboTargetServer.SelectedIndex = 0;
 
-            foreach ( var vault in ServerNames[0].Vaults)
+            foreach (var vault in ServerNames[0].Vaults)
             {
                 comboVault.Items.Add(vault);
             }
@@ -75,6 +76,11 @@ namespace ChangePDMArchiveServer
 
         private string GetCurrentArchiveServer()
         {
+            if (comboVault.SelectedItem == null)
+            {
+                return "NOT FOUND";
+            }
+
             RegistryKey rk = Registry.LocalMachine.OpenSubKey($"SOFTWARE\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{comboVault.SelectedItem}", false);
             if (rk == null)
             {
@@ -89,9 +95,19 @@ namespace ChangePDMArchiveServer
 
         private void ChangeArchiveServer(string vaultName, string serverName)
         {
+            if (string.IsNullOrEmpty(vaultName))
+            {
+                throw new InvalidDataException("No vault selected");
+            }
+
+            if (string.IsNullOrEmpty(serverName))
+            {
+                throw new InvalidDataException("No target server selected");
+            }
+
             string txt = $"Vault = {vaultName}{Environment.NewLine}Server = {serverName}{Environment.NewLine}";
-            RegistryKey rk1 = Registry.LocalMachine.OpenSubKey($"SOFTWARE\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{comboVault.SelectedItem}", true);
-            RegistryKey rk2 = Registry.LocalMachine.OpenSubKey($"SOFTWARE\\WOW6432Node\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{comboVault.SelectedItem}", true);
+            RegistryKey rk1 = Registry.LocalMachine.OpenSubKey($"SOFTWARE\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{vaultName}", true);
+            RegistryKey rk2 = Registry.LocalMachine.OpenSubKey($"SOFTWARE\\WOW6432Node\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{vaultName}", true);
             try
             {
 
@@ -101,19 +117,13 @@ namespace ChangePDMArchiveServer
                     throw new Exception("PDM registry not detected. PDM may not be installed");
                 }
 
-                string newValue = ((Server)comboTargetServer.SelectedItem).Name;
-                if (String.IsNullOrEmpty(newValue))
-                {
-                    throw new InvalidDataException("No target server selected");
-                }
-
-                rk1.SetValue("ServerLoc", newValue);
+                rk1.SetValue("ServerLoc", serverName);
 
                 if (rk2 == null)
                 {
-                    rk2 = Registry.LocalMachine.CreateSubKey($"SOFTWARE\\WOW6432Node\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{comboVault.SelectedItem}");
+                    rk2 = Registry.LocalMachine.CreateSubKey($"SOFTWARE\\WOW6432Node\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{vaultName}");
                 }
-                rk2.SetValue("ServerLoc", newValue);
+                rk2.SetValue("ServerLoc", serverName);
 
                 lblCurrentServerValue.Text = GetCurrentArchiveServer();
             }
@@ -123,12 +133,12 @@ namespace ChangePDMArchiveServer
             }
             finally
             {
-                rk1.Close();
-                rk1.Dispose();
-                
+                rk1?.Close();
+                rk1?.Dispose();
+
                 rk2?.Close();
                 rk2?.Dispose();
-                
+
             }
         }
 
@@ -141,12 +151,27 @@ namespace ChangePDMArchiveServer
         {
             try
             {
-                ChangeArchiveServer(comboVault.SelectedItem.ToString(), ((Server)comboTargetServer.SelectedItem).Name);
+                if (comboVault.SelectedItem == null)
+                {
+                    txtBoxResults.Text = "ERROR: No vault selected. Please select a vault.";
+                    return;
+                }
+
+                if (comboTargetServer.SelectedItem == null)
+                {
+                    txtBoxResults.Text = "ERROR: No target server selected. Please select a target server.";
+                    return;
+                }
+
+                string vaultName = comboVault.SelectedItem.ToString();
+                string serverName = ((Server)comboTargetServer.SelectedItem).Name;
+
+                ChangeArchiveServer(vaultName, serverName);
                 if (checkBoxRestartOnUpdate.Checked)
                 {
                     SoftRebootPdm();
                 }
-                txtBoxResults.Text = $"Successfully updated target archive server to {((Server)comboTargetServer.SelectedItem).Name} for {comboVault.SelectedItem.ToString()} vault.";
+                txtBoxResults.Text = $"Successfully updated target archive server to {serverName} for {vaultName} vault.";
             }
             catch (FileNotFoundException ex)
             {
@@ -173,13 +198,21 @@ namespace ChangePDMArchiveServer
         private void comboTargetServer_SelectedIndexChanged(object sender, EventArgs e)
         {
             // get vaults for selected server
+            if (comboTargetServer.SelectedItem == null)
+            {
+                return;
+            }
+
             var server = (Server)comboTargetServer.SelectedItem;
             comboVault.Items.Clear();
             foreach (var vault in server.Vaults)
             {
                 comboVault.Items.Add(vault);
             }
-            comboVault.SelectedIndex = 0;
+            if (comboVault.Items.Count > 0)
+            {
+                comboVault.SelectedIndex = 0;
+            }
         }
 
         private void SoftRebootPdm()
@@ -192,12 +225,12 @@ namespace ChangePDMArchiveServer
             Process[] viewServerProcesses = Process.GetProcessesByName("ViewServer");
 
             // Stop viewserver and edmservers
-            viewServerProcesses.ToList().ForEach(p => { p.Kill(); p.Dispose();});
+            viewServerProcesses.ToList().ForEach(p => { p.Kill(); p.Dispose(); });
             edmServerProcesses.ToList().ForEach(p => { p.Kill(); p.Dispose(); });
 
             // Stop explorer.exe
-            explorerProcesses.ToList().ForEach(p => { p.Kill(); p.Dispose(); });           
-           
+            explorerProcesses.ToList().ForEach(p => { p.Kill(); p.Dispose(); });
+
 
             // Restart explorer.exe if not already running
             Process[] activeExplorer = Process.GetProcessesByName("explorer");
@@ -209,7 +242,7 @@ namespace ChangePDMArchiveServer
                 explorerProcess.Start();
                 explorerProcess.Dispose();
             }
-            
+
         }
 
         private void btn_restartPdm_Click(object sender, EventArgs e)
