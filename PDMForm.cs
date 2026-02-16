@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.Data;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace ChangePDMArchiveServer
 {
@@ -144,7 +145,9 @@ namespace ChangePDMArchiveServer
 
         private void PDMForm_Load(object sender, EventArgs e)
         {
-
+            // Set version label from assembly version
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            lblVersion.Text = $"v{version.Major}.{version.Minor}.{version.Build}";
         }
 
         private void materialButton1_Click(object sender, EventArgs e)
