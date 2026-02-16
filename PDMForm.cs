@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.Data;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace ChangePDMArchiveServer
 {
@@ -78,7 +79,7 @@ namespace ChangePDMArchiveServer
         {
             if (comboVault.SelectedItem == null)
             {
-                return "NOT FOUND";
+                return "No Vault Selected";
             }
 
             RegistryKey rk = Registry.LocalMachine.OpenSubKey($"SOFTWARE\\SolidWorks\\Applications\\PDMWorks Enterprise\\Databases\\{comboVault.SelectedItem}", false);
@@ -144,7 +145,9 @@ namespace ChangePDMArchiveServer
 
         private void PDMForm_Load(object sender, EventArgs e)
         {
-
+            // Set version label from assembly version
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            lblVersion.Text = $"v{version.Major}.{version.Minor}.{version.Build}";
         }
 
         private void materialButton1_Click(object sender, EventArgs e)

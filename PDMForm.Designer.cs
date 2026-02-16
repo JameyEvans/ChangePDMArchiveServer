@@ -41,6 +41,7 @@ namespace ChangePDMArchiveServer
             this.lblCurrentServerValue = new MaterialSkin.Controls.MaterialLabel();
             this.btn_restartPdm = new MaterialSkin.Controls.MaterialButton();
             this.checkBoxRestartOnUpdate = new System.Windows.Forms.CheckBox();
+            this.lblVersion = new MaterialSkin.Controls.MaterialLabel();
             this.SuspendLayout();
             // 
             // lblTargetServer
@@ -213,11 +214,26 @@ namespace ChangePDMArchiveServer
             this.checkBoxRestartOnUpdate.Text = "Restart PDM On Update";
             this.checkBoxRestartOnUpdate.UseVisualStyleBackColor = true;
             // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Depth = 0;
+            this.lblVersion.Font = new System.Drawing.Font("Roboto", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.lblVersion.FontType = MaterialSkin.MaterialSkinManager.fontType.Overline;
+            this.lblVersion.Location = new System.Drawing.Point(730, 432);
+            this.lblVersion.MouseState = MaterialSkin.MouseState.HOVER;
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(44, 13);
+            this.lblVersion.TabIndex = 11;
+            this.lblVersion.Text = "v1.0.0";
+            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
             // PDMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(817, 454);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.checkBoxRestartOnUpdate);
             this.Controls.Add(this.btn_restartPdm);
             this.Controls.Add(this.lblCurrentServerValue);
@@ -249,5 +265,6 @@ namespace ChangePDMArchiveServer
         private MaterialSkin.Controls.MaterialLabel lblCurrentServerValue;
         private MaterialSkin.Controls.MaterialButton btn_restartPdm;
         private CheckBox checkBoxRestartOnUpdate;
+        private MaterialSkin.Controls.MaterialLabel lblVersion;
     }
 }
